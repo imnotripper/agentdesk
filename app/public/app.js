@@ -14,6 +14,7 @@ const state = {
   config: null,
   demo: typeof window.Pi === 'undefined',
   piInited: false,
+  piAuthed: false, // Pi.authenticate has run in THIS page session
   sessionToken: localStorage.getItem('agentdesk_session') || null,
   user: JSON.parse(localStorage.getItem('agentdesk_user') || 'null'),
   currentType: 'research',
@@ -72,6 +73,7 @@ async function signIn() {
   } else {
     const auth = await window.Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
     accessToken = auth.accessToken;
+    state.piAuthed = true;
   }
   // /api/verify takes the Pi access token as its Bearer token (not our
   // session token), so this one call is done by hand instead of via api().
@@ -91,7 +93,14 @@ async function signIn() {
 }
 
 async function ensureSignedIn() {
-  if (state.sessionToken && state.user) return state.user;
+  if (state.sessionToken && state.user) {
+    // A restored localStorage session is NOT a Pi SDK session: after a page
+    // reload the SDK has not authenticated, so Pi.createPayment would fail
+    // with 'Cannot create a payment without "payments" scope'. Re-run
+    // Pi.authenticate (both scopes) once per page session before paying.
+    if (!state.demo && !state.piAuthed) return signIn();
+    return state.user;
+  }
   return signIn();
 }
 
