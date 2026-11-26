@@ -16,14 +16,39 @@ services:
       - key: SANDBOX
         value: "true"
       - key: PI_API_KEY
-        value: ""
+        sync: false
       # LLM keys for the worker (Groq primary, Gemini fallback — wired
       # 2026-11-26). Keys are NOT in the repo: paste them in the Render
       # dashboard (Environment) at deploy time. Empty = placeholder
       # generator, so the staging demo would show placeholder text.
       - key: LLM_API_KEY
-        value: ""
+        sync: false
       - key: LLM_FALLBACK_API_KEY
-        value: ""
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+  # Production (Mainnet) — separate service because the Pi Console requires
+  # a DIFFERENT domain from the Staging app. SANDBOX=false; the domain
+  # validation key for THIS app is served from the DOMAIN_VALIDATION_KEY
+  # env var (config.js prefers it over validation-key.txt, which holds
+  # the Staging key). Set PI_API_KEY + DOMAIN_VALIDATION_KEY in the
+  # Render dashboard; sync:false keeps blueprint syncs from wiping them.
+  - type: web
+    name: agentdesk-production
+    env: node
+    plan: free
+    rootDir: app
+    startCommand: node server.js
+    envVars:
+      - key: SANDBOX
+        value: "false"
+      - key: PI_API_KEY
+        sync: false
+      - key: DOMAIN_VALIDATION_KEY
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_FALLBACK_API_KEY
+        sync: false
       - key: SESSION_SECRET
         generateValue: true
