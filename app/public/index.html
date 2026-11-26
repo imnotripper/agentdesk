@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentDesk — Hire an AI agent, pay with Pi</title>
+<meta name="description" content="AgentDesk lets Pioneers hire an AI agent for research summaries, content drafts and business starter packs — paid per task in Pi.">
+<link rel="stylesheet" href="/style.css">
+<!-- Pi SDK. Loaded on every page, but NO SDK method is called on page load:
+     the landing page must stay fully browsable for PiNet visitors. Pi.init /
+     Pi.authenticate only run when the user taps Sign in or Hire agent. -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+</head>
+<body>
+
+<div id="demoBanner" class="demo-banner" hidden>
+  DEMO MODE — the Pi SDK was not detected (you are in a regular browser), so
+  sign-in and payments are <strong>simulated with clearly fake data</strong>.
+  No real Pi moves. Open this page inside Pi Browser for the real flow.
+</div>
+
+<header class="site-header">
+  <div class="brand">AgentDesk</div>
+  <nav>
+    <button class="nav-btn" data-nav="catalog">Catalog</button>
+    <button class="nav-btn" data-nav="tasks">My Tasks</button>
+  </nav>
+  <div class="user-area">
+    <span id="userChip" class="user-chip" hidden></span>
+    <button id="signInBtn" class="btn btn-primary">Sign in with Pi</button>
+  </div>
+</header>
+
+<main>
+  <!-- ============================ CATALOG / LANDING ============================ -->
+  <section id="view-catalog" class="view">
+    <div class="hero">
+      <h1>Hire an AI agent. Pay with Pi.</h1>
+      <p class="hero-sub">
+        AgentDesk is a small workshop of AI agents for Pioneers. Pick a task,
+        describe what you need in your own words, pay a fixed price in Pi —
+        and get the finished work back right here in the app.
+      </p>
+      <p class="hero-note">No accounts to create, no subscriptions. Sign-in is Pi only, payment is Pi only.</p>
+    </div>
+
+    <h2 class="section-title">Task catalog</h2>
+    <div id="catalogGrid" class="catalog-grid"><!-- rendered by app.js --></div>
+
+    <h2 class="section-title">How it works</h2>
+    <ol class="steps">
+      <li><strong>Pick a task</strong> and write a short brief — what you need, in your own words.</li>
+      <li><strong>Sign in with Pi</strong> (only when you are ready to hire — browsing is open to everyone).</li>
+      <li><strong>Pay the fixed Pi price</strong> in the Pi payment sheet. Work starts only after payment is confirmed.</li>
+      <li><strong>Receive the result</strong> under <em>My Tasks</em> — read it, copy it, use it.</li>
+    </ol>
+
+    <h2 class="section-title">What a result looks like</h2>
+    <div class="sample">
+      <div class="sample-head">Sample — Research Summary</div>
+      <p><em>“Summarise the options for accepting payments in a small online shop.”</em></p>
+      <p>The delivered result opens with a two-sentence summary, follows with the main
+      options compared in plain language (costs, effort, risks), and ends with a short
+      “read next” list. Every task type follows the same promise: structured, concrete,
+      and written for a busy person — not a wall of text.</p>
+    </div>
+  </section>
+
+  <!-- ============================ ORDER FORM ============================ -->
+  <section id="view-order" class="view" hidden>
+    <h2 class="section-title">Hire an agent</h2>
+    <div class="card">
+      <label class="field-label" for="taskType">Task type</label>
+      <select id="taskType"></select>
+      <p id="taskPrice" class="price-line"></p>
+
+      <label class="field-label" for="taskBrief">Your brief</label>
+      <textarea id="taskBrief" rows="6" maxlength="2000"
+        placeholder="Describe what you need, in your own words…"></textarea>
+      <p id="briefHint" class="hint"></p>
+
+      <div class="row">
+        <button id="backBtn" class="btn">Back to catalog</button>
+        <button id="payBtn" class="btn btn-primary">Pay &amp; start task</button>
+      </div>
+      <p id="orderStatus" class="status-line" role="status"></p>
+    </div>
+  </section>
+
+  <!-- ============================ MY TASKS ============================ -->
+  <section id="view-tasks" class="view" hidden>
+    <h2 class="section-title">My Tasks</h2>
+    <p id="tasksEmpty" class="hint">You have no tasks yet. Pick one from the catalog to get started.</p>
+    <div id="taskList"></div>
+  </section>
+
+  <!-- ============================ INFO ============================ -->
+  <section class="info-grid">
+    <div class="card">
+      <h3>About</h3>
+      <p>AgentDesk is an independent app built for the Pi ecosystem. It is not
+      affiliated with Pi Network or the Pi Core Team. Prices are fixed per task
+      type and shown before you pay — there are no hidden charges.</p>
+    </div>
+    <div class="card">
+      <h3>Privacy Policy</h3>
+      <p>We store only what the service needs: your Pi user id and username,
+      the briefs you submit, the results we deliver, and the payment identifiers
+      (payment id / transaction id) needed to prove a task was paid for.
+      We do not collect email addresses, phone numbers or passwords — sign-in is
+      handled entirely by Pi Authentication. You can ask for your task history
+      to be deleted via the support contact below.</p>
+    </div>
+    <div class="card">
+      <h3>Support</h3>
+      <p>Something stuck? A payment that completed but a task that did not start
+      is always fixed or re-run — contact support from inside Pi Browser and
+      include your task id (shown under My Tasks).</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">AgentDesk — built for Pi Next. Demo build.</footer>
+
+<!-- ============================ DEMO PAYMENT SHEET ============================ -->
+<div id="demoPayModal" class="modal" hidden>
+  <div class="modal-card">
+    <h3>DEMO payment sheet (simulated)</h3>
+    <p id="demoPayText"></p>
+    <p class="hint">This is a fake stand-in for the real Pi payment sheet.
+    No real Pi will move.</p>
+    <div class="row">
+      <button id="demoCancelBtn" class="btn">Cancel (demo)</button>
+      <button id="demoPayBtn" class="btn btn-primary">Pay (demo)</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

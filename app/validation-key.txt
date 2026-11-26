@@ -1,0 +1,5 @@
+PLACEHOLDER — replace this file's contents with the validation key issued by
+the Pi Developer Portal / Web Console for THIS app and network, or set
+DOMAIN_VALIDATION_KEY in .env instead. This file is served at
+/validation-key.txt and must stay in place permanently once the domain is
+verified (removing it can fail later re-checks).
